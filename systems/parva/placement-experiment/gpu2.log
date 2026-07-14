@@ -1,0 +1,23 @@
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/parva/placement-experiment[00m$ (reverse-i-search)`': [Ke': [7me[27mxitx': [7mex[27mitp': export USE_SUDO=1; [7mexp[27mort VENV=~/virtual/sus-gpus[1@o': export USE_SUDO=1; [7mexpo[27m[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/parva/placement-experiment[00m$ export USE_SUDO=1; export VENV=~/virtual/sus-gpus
+[?2004l[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/parva/placement-experiment[00m$ ./gpu2.sh [K
+[?2004lSystem: FGD | Running mix: diffusion_256_256-1-2-12.9-1.0-1.0-0.25-0.43 resnet152-16-2-10650-1.0-1.0-0.25-355 diffusion_256_256-1-2-12.9-1.0-1.0-0.25-0.43 mobilenet_v3_large-8-1-58990-1.0-1.0-0.25-1966.634811879258 | Device: 2
+Logs at /tmp/print_outs-6314da1c.txt
+Running point experiment for custom-mig with round #0
+Process no longer alive
+Exiting with error_code=1 (0 is clean exit)
+Examine /tmp/print_outs-6314da1c.txt for logs
+Completed diffusion_256_256-1-2-12.9-1.0-1.0-0.25-0.43 resnet152-16-2-10650-1.0-1.0-0.25-355 diffusion_256_256-1-2-12.9-1.0-1.0-0.25-0.43 mobilenet_v3_large-8-1-58990-1.0-1.0-0.25-1966.634811879258 on GPU 2 with 1410 MHz for system FGD.
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/parva/placement-experiment[00m$ exit[Kexit
+[?2004lexit
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/parva/placement-experiment[00m$ (reverse-i-search)`': [Ke': [7me[27mxitx': [7mex[27mitp': export USE_SUDO=1; [7mexp[27mort VENV=~/virtual/sus-gpus[1@o': export USE_SUDO=1; [7mexpo[27m[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/parva/placement-experiment[00m$ export USE_SUDO=1; export VENV=~/virtual/sus-gpus
+[?2004l[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/parva/placement-experiment[00m$ ./pgu2[K[K[K[Kgpu2.sh [K
+[?2004lSystem: FGD | Running mix: diffusion_256_256-1-2-13-1.0-1.0-0.25-0.43 resnet152-16-2-10650-1.0-1.0-0.25-355 diffusion_256_256-1-2-13-1.0-1.0-0.25-0.43 mobilenet_v3_large-8-1-58990-1.0-1.0-0.25-1966.634811879258 | Device: 2
+Logs at /tmp/print_outs-f861715a.txt
+Running point experiment for custom-mig with round #0
+[sudo] password for lab-admin: 
+^CExiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-f861715a.txt for logs
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/parva/placement-experiment[00m$ exit
+[?2004lexit

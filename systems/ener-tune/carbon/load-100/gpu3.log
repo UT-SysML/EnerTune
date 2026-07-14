@@ -1,0 +1,34 @@
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/carbon/load-100[00m$ (reverse-i-search)`': [Ke': [7me[27mxitx': [7mex[27mitp': export USE_SUDO=1; [7mexp[27mort VENV=~/virtual/sus-gpus[1@o': export USE_SUDO=1; [7mexpo[27m[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/carbon/load-100[00m$ export USE_SUDO=1; export VENV=~/virtual/sus-gpus
+[?2004l[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/carbon/load-100[00m$ ./gpu3.sh [K
+[?2004lSystem: Usher | Running mix: diffusion_1024_1024-1-4-29-1.0-1.0-0.25-0.0923146137935218 | Device: 3
+Logs at /tmp/print_outs-420404b7.txt
+Running point experiment for custom-mig with round #0
+Made it before while loop for duration arg
+Duration is 0
+Run success: results are stored in results/a100/diffusion_1024_1024/diffusion_1024_1024-1-point
+Exiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-420404b7.txt for logs
+Completed diffusion_1024_1024-1-4-29-1.0-1.0-0.25-0.0923146137935218 on GPU 3 with 1140 MHz for system Usher.
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/carbon/load-100[00m$ ./gpu3.sh
+[?2004lSystem: Usher | Running mix: diffusion_256_256-1-3-83-1.0-1.0-0.25-0.41497842657583255 whisper-4-3-708-1.0-1.0-0.25-3.29843852958 mobilenet_v3_large-16-1-176686-1.0-1.0-0.25-981.59 | Device: 3
+Logs at /tmp/print_outs-cb1bc7a5.txt
+Running point experiment for custom-mig with round #0
+Process no longer alive
+Exiting with error_code=1 (0 is clean exit)
+Examine /tmp/print_outs-cb1bc7a5.txt for logs
+Completed diffusion_256_256-1-3-83-1.0-1.0-0.25-0.41497842657583255 whisper-4-3-708-1.0-1.0-0.25-3.29843852958 mobilenet_v3_large-16-1-176686-1.0-1.0-0.25-981.59 on GPU 3 with 1050 MHz for system Usher.
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/carbon/load-100[00m$ exit[K[K[K[K./gpu3.sh
+[?2004lSystem: Usher | Running mix: diffusion_256_256-1-3-83-1.0-1.0-0.25-0.41497842657583255 whisper-8-2-708-1.0-1.0-0.25-2.29843852958 mobilenet_v3_large-16-1-176686-1.0-1.0-0.25-981.59 | Device: 3
+Logs at /tmp/print_outs-e78b5637.txt
+Running point experiment for custom-mig with round #0
+Made it before while loop for duration arg
+Duration is 0
+Run success: results are stored in results/a100/diffusion_256_256-whisper-mobilenet_v3_large/diffusion_256_256-1-point_whisper-8-point_mobilenet_v3_large-16-point
+Exiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-e78b5637.txt for logs
+Completed diffusion_256_256-1-3-83-1.0-1.0-0.25-0.41497842657583255 whisper-8-2-708-1.0-1.0-0.25-2.29843852958 mobilenet_v3_large-16-1-176686-1.0-1.0-0.25-981.59 on GPU 3 with 1050 MHz for system Usher.
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/carbon/load-100[00m$ exit
+[?2004lexit

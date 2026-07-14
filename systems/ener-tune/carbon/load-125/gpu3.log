@@ -1,0 +1,35 @@
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/carbon/load-125[00m$ (reverse-i-search)`': [Ke': [7me[27mxitx': [7mex[27mitp': export USE_SUDO=1; [7mexp[27mort VENV=~/virtual/sus-gpus[1@o': export USE_SUDO=1; [7mexpo[27m[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/carbon/load-125[00m$ export USE_SUDO=1; export VENV=~/virtual/sus-gpus
+[?2004l[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/carbon/load-125[00m$ ./gpu3.sh [K
+[?2004lSystem: Usher | Running mix: whisper-2-4-708-1.25-1.25-0.25-3.29843852958 mobilenet_v3_large-4-3-176686-1.25-1.25-0.25-981.59 | Device: 3
+Logs at /tmp/print_outs-5b29f47d.txt
+Running point experiment for custom-mig with round #0
+Made it before while loop for duration arg
+Duration is 0
+Run success: results are stored in results/a100/whisper-mobilenet_v3_large/whisper-2-point_mobilenet_v3_large-4-point
+Exiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-5b29f47d.txt for logs
+Completed whisper-2-4-708-1.25-1.25-0.25-3.29843852958 mobilenet_v3_large-4-3-176686-1.25-1.25-0.25-981.59 on GPU 3 with 1320 MHz for system Usher.
+
+System: Usher | Running mix: diffusion_1024_1024-1-4-29-1.0-1.0-0.25-0.0923146137935218 | Device: 3
+Logs at /tmp/print_outs-153d48cd.txt
+Running point experiment for custom-mig with round #0
+Made it before while loop for duration arg
+Duration is 0
+Run success: results are stored in results/a100/diffusion_1024_1024/diffusion_1024_1024-1-point
+Exiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-153d48cd.txt for logs
+Completed diffusion_1024_1024-1-4-29-1.0-1.0-0.25-0.0923146137935218 on GPU 3 with 1320 MHz for system Usher.
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/carbon/load-125[00m$ .gpu3[K[K[K[K[K./gpu3.sh [K
+[?2004lSystem: Usher | Running mix: diffusion_1024_1024-1-4-29-1.0-1.0-0.25-0.0923146137935218 | Device: 3
+Logs at /tmp/print_outs-f52b5eea.txt
+Running point experiment for custom-mig with round #0
+Made it before while loop for duration arg
+Duration is 0
+Run success: results are stored in results/a100/diffusion_1024_1024/diffusion_1024_1024-1-point
+Exiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-f52b5eea.txt for logs
+Completed diffusion_1024_1024-1-4-29-1.0-1.0-0.25-0.0923146137935218 on GPU 3 with 1140 MHz for system Usher.
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/carbon/load-125[00m$ exit
+[?2004lexit

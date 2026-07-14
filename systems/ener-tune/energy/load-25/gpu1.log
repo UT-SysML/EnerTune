@@ -1,0 +1,14 @@
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/energy/load-25[00m$ (reverse-i-search)`': [Ke': sudo r[7me[27mboot nowx': export USE_SUDO=1; [7mex[27mport VENV=~/virtual/sus-gpus[1@p': export USE_SUDO=1; [7mexp[27m[1@o': export USE_SUDO=1; [7mexpo[27m[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/energy/load-25[00m$ export USE_SUDO=1; export VENV=~/virtual/sus-gpus
+[?2004l[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/energy/load-25[00m$ ./gpu1.sh [K
+[?2004lSystem: Usher | Running mix: densenet161-1-4-42154-0.25-0.25-0.25-234.19 resnet152-1-3-50104-0.25-0.25-0.25-278.36 | Device: 1
+Logs at /tmp/print_outs-86085436.txt
+Running point experiment for custom-mig with round #0
+Made it before while loop for duration arg
+Duration is 0
+Run success: results are stored in results/a100/densenet161-resnet152/densenet161-1-point_resnet152-1-point
+Exiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-86085436.txt for logs
+Completed densenet161-1-4-42154-0.25-0.25-0.25-234.19 resnet152-1-3-50104-0.25-0.25-0.25-278.36 on GPU 1 with 780 MHz for system Usher.
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/energy/load-25[00m$ exit
+[?2004lexit

@@ -1,0 +1,14 @@
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/usher/load-125[00m$ (reverse-i-search)`': [Ke': [7me[27mxitx': [7mex[27mitp': export USE_SUDO=1; [7mexp[27mort VENV=~/virtual/sus-gpus[1@o': export USE_SUDO=1; [7mexpo[27m[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/usher/load-125[00m$ export USE_SUDO=1; export VENV=~/virtual/sus-gpus
+[?2004l[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/usher/load-125[00m$ ./gpu0.sh 
+[?2004lSystem: Usher | Running mix: diffusion_256_256-1-40-83-1.25-1.25-0.25-0.41497842657583255 vgg11-8-40-30517-1.25-1.25-0.25-169.54 whisper-1-20-708-1.25-1.25-0.25-3.29843852958 | Device: 0
+Logs at /tmp/print_outs-645f3da9.txt
+Running point experiment for mps-manual-cap with round #0
+[sudo] password for lab-admin: 
+Made it before while loop for duration arg
+Duration is 0
+Run success: results are stored in results/a100/diffusion_256_256-vgg11-whisper/diffusion_256_256-1-point_vgg11-8-point_whisper-1-point
+Exiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-645f3da9.txt for logs
+Completed diffusion_256_256-1-40-83-1.25-1.25-0.25-0.41497842657583255 vgg11-8-40-30517-1.25-1.25-0.25-169.54 whisper-1-20-708-1.25-1.25-0.25-3.29843852958 on GPU 0 with 1410 MHz for system Usher.
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/usher/load-125[00m$ 

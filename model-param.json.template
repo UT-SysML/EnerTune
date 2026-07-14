@@ -1,0 +1,8 @@
+{
+    "model": ${model},
+    "batch-size": ${batch_size},
+    "distribution-type": ${distribution_type},
+    "rps": ${requests_per_second},
+    "mig-slice": ${mig_slice},
+    "num-reqs": ${num_req},
+}

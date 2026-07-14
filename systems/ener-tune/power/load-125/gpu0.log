@@ -1,0 +1,14 @@
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/load-125[00m$ (reverse-i-search)`': [Ke': [7me[27mxitx': [7mex[27mitp': export USE_SUDO=1; [7mexp[27mort VENV=~/virtual/sus-gpus[1@o': export USE_SUDO=1; [7mexpo[27m[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/load-125[00m$ export USE_SUDO=1; export VENV=~/virtual/sus-gpus
+[?2004l[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/load-125[00m$ ./gpu0.sh [K
+[?2004lSystem: EnerTune | Running mix: mobilenet_v3_large-4-4-176686-1.25-1.25-0.25-981.59 vgg11-8-3-134037-1.25-1.25-0.25-744.65 | Device: 0
+Logs at /tmp/print_outs-61d3e534.txt
+Running point experiment for custom-mig with round #0
+Made it before while loop for duration arg
+Duration is 0
+Run success: results are stored in results/a100/mobilenet_v3_large-vgg11/mobilenet_v3_large-4-point_vgg11-8-point
+Exiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-61d3e534.txt for logs
+Completed mobilenet_v3_large-4-4-176686-1.25-1.25-0.25-981.59 vgg11-8-3-134037-1.25-1.25-0.25-744.65 on GPU 0 with 690 MHz for system EnerTune.
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/load-125[00m$ exit
+[?2004lexit

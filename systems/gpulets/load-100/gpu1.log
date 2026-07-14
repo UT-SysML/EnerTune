@@ -1,0 +1,25 @@
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/gpulets/load-100[00m$ (reverse-i-search)`': [Ke': [7me[27mxitx': [7mex[27mitp': export USE_SUDO=1; [7mexp[27mort VENV=~/virtual/sus-gpus[1@o': export USE_SUDO=1; [7mexpo[27m[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/gpulets/load-100[00m$ export USE_SUDO=1; export VENV=~/virtual/sus-gpus
+[?2004l[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/gpulets/load-100[00m$ ./gpu1.sh 
+[?2004l./gpu1.sh: line 1: !/bin/bash: No such file or directory
+System: Usher | Running mix: mobilenet_v3_large-8-43-176686-1.0-1.0-0.25-981.59 whisper-1-43-708-1.0-1.0-0.25-3.29843852958 | Device: 1
+Logs at /tmp/print_outs-8639e466.txt
+Running point experiment for mps-manual-cap with round #0
+Made it before while loop for duration arg
+Duration is 0
+Run success: results are stored in results/a100/mobilenet_v3_large-whisper/mobilenet_v3_large-8-point_whisper-1-point
+Exiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-8639e466.txt for logs
+Completed mobilenet_v3_large-8-43-176686-1.0-1.0-0.25-981.59 whisper-1-43-708-1.0-1.0-0.25-3.29843852958 on GPU 1 with 1410 MHz for system Usher.
+
+System: Usher | Running mix: vgg11-16-100-134037-1.0-1.0-0.25-744.65 | Device: 1
+Logs at /tmp/print_outs-0e2d291c.txt
+Running point experiment for mps-manual-cap with round #0
+Made it before while loop for duration arg
+Duration is 0
+Run success: results are stored in results/a100/vgg11/vgg11-16-point
+Exiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-0e2d291c.txt for logs
+Completed vgg11-16-100-134037-1.0-1.0-0.25-744.65 on GPU 1 with 1410 MHz for system Usher.
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/gpulets/load-100[00m$ exit
+[?2004lexit

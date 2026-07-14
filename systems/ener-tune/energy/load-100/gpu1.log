@@ -1,0 +1,14 @@
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/energy/load-100[00m$ (reverse-i-search)`': [Ke': [7me[27mxitx': [7mex[27mitp': export USE_SUDO=1; [7mexp[27mort VENV=~/virtual/sus-gpus[1@o': export USE_SUDO=1; [7mexpo[27m[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/energy/load-100[00m$ export USE_SUDO=1; export VENV=~/virtual/sus-gpus
+[?2004l[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/energy/load-100[00m$ ./gpu3[K2.sh [K[K[K[K[K1.sh 
+[?2004lSystem: Usher | Running mix: diffusion_256_256-1-4-83-1.0-1.0-0.25-0.41497842657583255 resnet152-8-3-50104-1.0-1.0-0.25-278.36 | Device: 1
+Logs at /tmp/print_outs-fcbf7a78.txt
+Running point experiment for custom-mig with round #0
+Made it before while loop for duration arg
+Duration is 0
+Run success: results are stored in results/a100/diffusion_256_256-resnet152/diffusion_256_256-1-point_resnet152-8-point
+Exiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-fcbf7a78.txt for logs
+Completed diffusion_256_256-1-4-83-1.0-1.0-0.25-0.41497842657583255 resnet152-8-3-50104-1.0-1.0-0.25-278.36 on GPU 1 with 870 MHz for system Usher.
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/energy/load-100[00m$ ext[Kit
+[?2004lexit

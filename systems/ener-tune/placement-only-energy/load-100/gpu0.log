@@ -1,0 +1,21 @@
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/placement-only/load-100[00m$ (reverse-i-search)`': [Ke': [7me[27mxitx': [7mex[27mitp': export USE_SUDO=1; [7mexp[27mort VENV=~/virtual/sus-gpus[1@o': export USE_SUDO=1; [7mexpo[27m[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/placement-only/load-100[00m$ export USE_SUDO=1; export VENV=~/virtual/sus-gpus
+[?2004l[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/placement-only/load-100[00m$ ./gpu0.sh [K
+[?2004lSystem: EnerTune | Running mix: densenet169-4-3-45732-1.0-1.0-0.25-254.07 resnet50-16-3-250380-1.0-1.0-0.25-1391.97 | Device: 0
+Logs at /tmp/print_outs-f255cfb5.txt
+Running point experiment for custom-mig with round #0
+[sudo] password for lab-admin: 
+Made it before while loop for duration arg
+Duration is 0
+Run success: results are stored in results/a100/densenet169-resnet50/densenet169-4-point_resnet50-16-point
+Exiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-f255cfb5.txt for logs
+Completed densenet169-4-3-45732-1.0-1.0-0.25-254.07 resnet50-16-3-250380-1.0-1.0-0.25-1391.97 on GPU 0 with 1410 MHz for system EnerTune.
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/placement-only/load-100[00m$ l
+[?2004lgpu0.log  [0m[01;32mgpu0.sh[0m*  gpu1.log  [01;32mgpu1.sh[0m*  gpu2.log  [01;32mgpu2.sh[0m*  gpu3.log  [01;32mgpu3.sh[0m*
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/placement-only/load-100[00m$ cd ~[K[K[K[Kscreen -ls
+[?2004lThere is a screen on:
+	1590462.pts-0.ece-a63826	(12/07/2025 03:43:30 PM)	(Attached)
+1 Socket in /run/screen/S-lab-admin.
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/placement-only/load-100[00m$ screen -r -d[K[K[Kexit
+[?2004lexit

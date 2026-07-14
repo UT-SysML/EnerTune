@@ -1,0 +1,14 @@
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/load-75[00m$ rexpo[K[K[K[K[K(reverse-i-search)`': [Ke': [7me[27mxitx': [7mex[27mitp': export USE_SUDO=1; [7mexp[27mort VENV=~/virtual/sus-gpus[1@o': export USE_SUDO=1; [7mexpo[27m[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/load-75[00m$ export USE_SUDO=1; export VENV=~/virtual/sus-gpus
+[?2004l[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/load-75[00m$ ./scre[K[K/g[K[K./gpu1.sh [K
+[?2004lSystem: Usher | Running mix: vgg11-4-4-134037-0.75-0.75-0.25-744.65 resnet152-8-3-50104-0.75-0.75-0.25-278.36 | Device: 1
+Logs at /tmp/print_outs-c6845039.txt
+Running point experiment for custom-mig with round #0
+Made it before while loop for duration arg
+Duration is 0
+Run success: results are stored in results/a100/vgg11-resnet152/vgg11-4-point_resnet152-8-point
+Exiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-c6845039.txt for logs
+Completed vgg11-4-4-134037-0.75-0.75-0.25-744.65 resnet152-8-3-50104-0.75-0.75-0.25-278.36 on GPU 1 with 510 MHz for system Usher.
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/load-75[00m$ exit
+[?2004lexit

@@ -1,0 +1,14 @@
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/parva/placement-experiment[00m$ (reverse-i-search)`': [Ke': [7me[27mxitx': [7mex[27mitp': export USE_SUDO=1; [7mexp[27mort VENV=~/virtual/sus-gpus[1@o': export USE_SUDO=1; [7mexpo[27m[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/parva/placement-experiment[00m$ export USE_SUDO=1; export VENV=~/virtual/sus-gpus
+[?2004l[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/parva/placement-experiment[00m$ ./gpu2.sh [K[K[K[K./gpu1.sh [K
+[?2004lSystem: FGD | Running mix: resnet50-16-3-41700-1.0-1.0-0.25-1391.97 densenet169-16-2-14400-1.0-1.0-0.25-480 densenet161-8-2-5700-1.0-1.0-0.25-190 | Device: 1
+Logs at /tmp/print_outs-ec792aa1.txt
+Running point experiment for custom-mig with round #0
+Made it before while loop for duration arg
+Duration is 0
+Run success: results are stored in results/a100/resnet50-densenet169-densenet161/resnet50-16-point_densenet169-16-point_densenet161-8-point
+Exiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-ec792aa1.txt for logs
+Completed resnet50-16-3-41700-1.0-1.0-0.25-1391.97 densenet169-16-2-14400-1.0-1.0-0.25-480 densenet161-8-2-5700-1.0-1.0-0.25-190 on GPU 1 with 1410 MHz for system FGD.
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/parva/placement-experiment[00m$ exit
+[?2004lexit

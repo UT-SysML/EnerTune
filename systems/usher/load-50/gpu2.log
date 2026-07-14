@@ -1,0 +1,14 @@
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/usher/load-50[00m$ (reverse-i-search)`': [Ke': [7me[27mxitx': [7mex[27mitp': export USE_SUDO=1; [7mexp[27mort VENV=~/virtual/sus-gpus[1@o': export USE_SUDO=1; [7mexpo[27m[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/usher/load-50[00m$ export USE_SUDO=1; export VENV=~/virtual/sus-gpus
+[?2004l[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/usher/load-50[00m$ ./gpu2.sh 
+[?2004lSystem: Usher | Running mix: diffusion_1024_1024-1-51-29-0.5-0.5-0.25-0.0923146137935218 resnet50-8-47-250380-0.5-0.5-0.25-1391.97 | Device: 2
+Logs at /tmp/print_outs-2ed47298.txt
+Running point experiment for mps-manual-cap with round #0
+Made it before while loop for duration arg
+Duration is 0
+Run success: results are stored in results/a100/diffusion_1024_1024-resnet50/diffusion_1024_1024-1-point_resnet50-8-point
+Exiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-2ed47298.txt for logs
+Completed diffusion_1024_1024-1-51-29-0.5-0.5-0.25-0.0923146137935218 resnet50-8-47-250380-0.5-0.5-0.25-1391.97 on GPU 2 with 1410 MHz for system Usher.
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/usher/load-50[00m$ exit
+[?2004lexit

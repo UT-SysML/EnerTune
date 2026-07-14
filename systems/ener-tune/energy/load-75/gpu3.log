@@ -1,0 +1,25 @@
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/energy/load-75[00m$ (reverse-i-search)`': [Ke': [7me[27mxitx': [7mex[27mitp': export USE_SUDO=1; [7mexp[27mort VENV=~/virtual/sus-gpus[1@o': export USE_SUDO=1; [7mexpo[27m[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/energy/load-75[00m$ export USE_SUDO=1; export VENV=~/virtual/sus-gpus
+[?2004l[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/energy/load-75[00m$ .//gpu3.sh [K[K[K[K[K./gpu3.sh [K
+[?2004lSystem: Usher | Running mix: resnet50-4-4-250380-0.75-0.75-0.25-1391.97 vgg19-2-3-30517-0.75-0.75-0.25-169.54 | Device: 3
+Logs at /tmp/print_outs-9fa8d8eb.txt
+Running point experiment for custom-mig with round #0
+Made it before while loop for duration arg
+Duration is 0
+Run success: results are stored in results/a100/resnet50-vgg19/resnet50-4-point_vgg19-2-point
+Exiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-9fa8d8eb.txt for logs
+Completed resnet50-4-4-250380-0.75-0.75-0.25-1391.97 vgg19-2-3-30517-0.75-0.75-0.25-169.54 on GPU 3 with 1320 MHz for system Usher.
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/energy/load-75[00m$ ./gpu3.sh
+[?2004lSystem: Usher | Running mix: diffusion_1024_1024-1-4-29-0.75-0.75-0.25-0.0923146137935218 densenet161-4-3-42154-0.75-0.75-0.25-234.19 | Device: 3
+Logs at /tmp/print_outs-d17dde2c.txt
+Running point experiment for custom-mig with round #0
+Made it before while loop for duration arg
+Duration is 0
+Run success: results are stored in results/a100/diffusion_1024_1024-densenet161/diffusion_1024_1024-1-point_densenet161-4-point
+Exiting with error_code=0 (0 is clean exit)
+Examine /tmp/print_outs-d17dde2c.txt for logs
+Completed diffusion_1024_1024-1-4-29-0.75-0.75-0.25-0.0923146137935218 densenet161-4-3-42154-0.75-0.75-0.25-234.19 on GPU 3 with 1050 MHz for system Usher.
+
+[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/energy/load-75[00m$ exit
+[?2004lexit
