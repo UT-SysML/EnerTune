@@ -1,26 +1,0 @@
-[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/parva[00m$ (reverse-i-search)`': [Ke': [7me[27mxitx': [7mex[27mitp': export USE_SUDO=1; [7mexp[27mort VENV=~/virtual/sus-gpus[1@o': export USE_SUDO=1; [7mexpo[27m[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/parva[00m$ export USE_SUDO=1; export VENV=~/virtual/sus-gpus
-[?2004l[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/parva[00m$ ./gpu2.sh [K[K[K[K1[K[K1.sh 
-[?2004lSystem: FGD | Running mix: diffusion_256_256-1-3-83-0.25-1.25-0.25-0.41497842657583255 resnet152-16-2-50104-0.25-1.25-0.25-278.36 mobilenet_v3_large-8-1-176686-0.25-1.25-0.25-981.59 | Device: 1
-Logs at /tmp/print_outs-d1c605e4.txt
-Running point experiment for custom-mig with round #0
-Made it before while loop for duration arg
-Duration is 0
-Running point experiment for custom-mig with round #1
-Made it before while loop for duration arg
-Duration is 0
-Running point experiment for custom-mig with round #2
-Made it before while loop for duration arg
-Duration is 0
-Running point experiment for custom-mig with round #3
-Made it before while loop for duration arg
-Duration is 0
-Running point experiment for custom-mig with round #4
-Made it before while loop for duration arg
-Duration is 0
-Run success: results are stored in results/a100/diffusion_256_256-resnet152-mobilenet_v3_large/diffusion_256_256-1-point_resnet152-16-point_mobilenet_v3_large-8-point
-Exiting with error_code=0 (0 is clean exit)
-Examine /tmp/print_outs-d1c605e4.txt for logs
-Completed diffusion_256_256-1-3-83-0.25-1.25-0.25-0.41497842657583255 resnet152-16-2-50104-0.25-1.25-0.25-278.36 mobilenet_v3_large-8-1-176686-0.25-1.25-0.25-981.59 on GPU 1 with 1410 MHz for system FGD.
-
-[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/parva[00m$ exit
-[?2004lexit
