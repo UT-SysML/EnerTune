@@ -56,24 +56,20 @@ Run scripts for each baseline to reproduce E2E results. For easier reproducabili
 
 Run each system at 5 load levels (25% to 125% load). In `systems/`, there is a directory per system: EnerTune, FGD, GPULets, ParvaGPU, and Usher. 
 
-For each baseline (other than EnerTune), run the following: 
+For each baseline, run the following: 
 ```
 $ cd systems/{baseline} # either fgd, gpulets, parva, usher
 $ cd load-{load_level} # either 25, 50, 75, 100, or 125
 $ load-{load_level}-{baseline}.sh
 ```
 
-For EnerTune, there a few different scripts to run to get E2E results depending on the metric we are optimizing for: power, energy, or carbon. For each, we have different scripts to run. 
+For EnerTune, run the following:
 
 ```
 $ cd systems/ener-tune/{optimization_metric} # power, energy, or carbon
 $ cd load-{load_level} # either 25, 50, 75, 100, or 125
-$ ./gpu0.sh
-$ ./gpu1.sh
-$ ./gpu2.sh
-$ ./gpu3.sh
+$ load-{load_level}-et-{optimization_metric} # power, energy, or carbon
 ```
-Please note, you should open each bash script and uncomment the job mix you want to get data for. Moreover, view the comment next to each job mix in the `mixes()` bash array, and update the frequency variable `freq` in the bash script depending on the job mix you are going to run. 
 
 If running smoothly, you will see the following
 ```
@@ -87,6 +83,4 @@ Exiting with error_code=0 (0 is clean exit)
 Examine /tmp/print_outs-{random-id}.txt for logs
 Completed {job_mix} on GPU {device_id} with {frequency} MHz for system {system}.
 ```
-
-
 
