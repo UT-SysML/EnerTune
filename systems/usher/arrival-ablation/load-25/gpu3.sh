@@ -19,7 +19,7 @@ for mix in "${mixes[@]}"; do
       --device-type a100 \
       --device-id ${device} \
       --modes mps-manual-cap \
-      --distribution point \
+      --distribution poisson \
       --min-freq ${freq} \
       --max-freq ${freq} \
       ${mix}

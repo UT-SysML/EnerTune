@@ -21,7 +21,7 @@ for mix in "${mixes[@]}"; do
       --device-type a100 \
       --device-id ${device} \
       --modes mps-manual-cap \
-      --distribution point \
+      --distribution poisson \
       --min-freq ${freq} \
       --max-freq ${freq} \
       ${mix}
@@ -30,6 +30,6 @@ for mix in "${mixes[@]}"; do
     echo""
 done
 
-mkdir -p ${git_dir}/results/usher-results/load-125
-cp -r ${git_dir}/results/a100/* ${git_dir}/results/usher-results/load-125/
+mkdir -p ${git_dir}/results/usher-ablation-arrival-results/load-125
+cp -r ${git_dir}/results/a100/* ${git_dir}/results/usher-ablation-arrival-results/load-125/
 rm -rf ${git_dir}/results/a100/*

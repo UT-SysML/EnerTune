@@ -5,7 +5,7 @@ import numpy as np
 import re
 import math
 
-SYSTEMS=['usher', 'parva', 'fgd', 'gpulets', 'et-power', 'et-energy', 'et-carbon', 'et-placement-only-power', 'et-placement-only-energy', 'et-placement-only-carbon']
+SYSTEMS=['usher', 'parva', 'fgd', 'gpulets', 'et-power', 'et-energy', 'et-carbon', 'et-placement-only-power', 'et-placement-only-energy', 'et-placement-only-carbon', 'et-energy-ablation-arrival', 'fgd-ablation-arrival', 'usher-ablation-arrival', 'parva-ablation-arrival', 'gpulets-ablation-arrival']
 MODEL_SLOS = {
     'resnet50': [47.57630825042726, 1391.97],
     'mobilenet_v3_large': [25.970196723937992, 981.59],

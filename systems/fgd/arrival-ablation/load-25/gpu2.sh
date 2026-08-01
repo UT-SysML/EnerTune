@@ -18,7 +18,7 @@ for mix in "${mixes[@]}"; do
       --device-type a100 \
       --device-id ${device} \
       --modes custom-mig \
-      --distribution point \
+      --distribution poisson \
       --min-freq ${freq} \
       --max-freq ${freq} \
       ${mix}
