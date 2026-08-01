@@ -68,7 +68,7 @@ For EnerTune, run the following:
 ```
 $ cd systems/ener-tune/{optimization_metric} # power, energy, or carbon
 $ cd load-{load_level} # either 25, 50, 75, 100, or 125
-$ load-{load_level}-et-{optimization_metric} # power, energy, or carbon
+$ load-{load_level}-et-{optimization_metric}.sh # power, energy, or carbon
 ```
 
 If running smoothly, you will see the following
