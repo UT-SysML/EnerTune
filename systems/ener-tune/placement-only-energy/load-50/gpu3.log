@@ -1,24 +1,0 @@
-[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/placement-only-energy/load-50[00m$ (reverse-i-search)`': [Ke': [7me[27mxitx': [7mex[27mitp': export USE_SUDO=1; [7mexp[27mort VENV=~/virtual/sus-gpus[1@o': export USE_SUDO=1; [7mexpo[27m[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/placement-only-energy/load-50[00m$ export USE_SUDO=1; export VENV=~/virtual/sus-gpus
-[?2004l[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/placement-only-energy/load-50[00m$ ./gpu3.sh [K
-[?2004lSystem: Usher | Running mix: diffusion_1024_1024-1-4-29-0.5-0.5-0.25-0.0923146137935218 gpt-1-3-40-0.5-0.5-0.25-0.16192860916956147 | Device: 3
-Logs at /tmp/print_outs-fdedef48.txt
-Running point experiment for custom-mig with round #0
-Made it before while loop for duration arg
-Duration is 0
-Run success: results are stored in results/a100/diffusion_1024_1024-gpt/diffusion_1024_1024-1-point_gpt-1-point
-Exiting with error_code=0 (0 is clean exit)
-Examine /tmp/print_outs-fdedef48.txt for logs
-Completed diffusion_1024_1024-1-4-29-0.5-0.5-0.25-0.0923146137935218 gpt-1-3-40-0.5-0.5-0.25-0.16192860916956147 on GPU 3 with 1410 MHz for system Usher.
-
-System: Usher | Running mix: vgg19-2-4-30517-0.5-0.5-0.25-169.54 densenet161-2-2-42154-0.5-0.5-0.25-234.19 | Device: 3
-Logs at /tmp/print_outs-cc4bb3ce.txt
-Running point experiment for custom-mig with round #0
-Made it before while loop for duration arg
-Duration is 0
-Run success: results are stored in results/a100/vgg19-densenet161/vgg19-2-point_densenet161-2-point
-Exiting with error_code=0 (0 is clean exit)
-Examine /tmp/print_outs-cc4bb3ce.txt for logs
-Completed vgg19-2-4-30517-0.5-0.5-0.25-169.54 densenet161-2-2-42154-0.5-0.5-0.25-234.19 on GPU 3 with 1410 MHz for system Usher.
-
-[?2004h[01;32mlab-admin@ece-a63826[00m:[01;34m~/sus-gpus/systems/ener-tune/placement-only-energy/load-50[00m$ exit
-[?2004lexit
