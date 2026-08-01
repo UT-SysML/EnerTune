@@ -5,7 +5,29 @@ import numpy as np
 import re
 import math
 
-SYSTEMS=['usher', 'parva', 'fgd', 'gpulets', 'et-power', 'et-energy', 'et-carbon', 'et-placement-only-power', 'et-placement-only-energy', 'et-placement-only-carbon', 'et-energy-ablation-arrival', 'fgd-ablation-arrival', 'usher-ablation-arrival', 'parva-ablation-arrival', 'gpulets-ablation-arrival']
+# Directory containing this script (the repo's results/ folder), so the aggregator
+# can be run from any working directory.
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+SYSTEMS=[
+    'usher', 
+    'parva', 
+    'fgd', 
+    'gpulets', 
+    'et-power', 
+    'et-energy', 
+    'et-carbon', 
+    'et-placement-only-power', 
+    'et-placement-only-energy', 
+    'et-placement-only-carbon', 
+    'et-energy-ablation-arrival', 
+    'fgd-ablation-arrival', 
+    'usher-ablation-arrival', 
+    'parva-ablation-arrival', 
+    'gpulets-ablation-arrival',
+    'et-pwr-estimator-ablation',
+    'et-energy-estimator-ablation',
+]
 MODEL_SLOS = {
     'resnet50': [47.57630825042726, 1391.97],
     'mobilenet_v3_large': [25.970196723937992, 981.59],
@@ -28,7 +50,7 @@ LT = 4 * 352 * 24 * 60 * 60
 
 for system in SYSTEMS:
     rows = []
-    for d in glob.glob(f"{system}-results/"):
+    for d in glob.glob(os.path.join(SCRIPT_DIR, f"{system}-results/")):
         if os.path.isdir(d):
             print(f"Processing {system} results in path {d}")
             for load_path in glob.glob(f"{d}/*/"):
@@ -130,5 +152,7 @@ for system in SYSTEMS:
                                         rows.append(row)
     df = pd.DataFrame(rows, columns=['system', 'frequency', 'load', 'distribution', 'model', 'batch_size', 'allocation_size', 'latency', 'tput', 'avg_pwr', 'max_pwr', 'total_energy', 'operational_carbon', 'embodied_carbon', 'total_carbon'])
     df = df.sort_values(by='load')
-    df.to_csv(f'./eval-results/{system}-results.csv', index=False)
+    eval_results_dir = os.path.join(SCRIPT_DIR, 'eval-results')
+    os.makedirs(eval_results_dir, exist_ok=True)
+    df.to_csv(os.path.join(eval_results_dir, f'{system}-results.csv'), index=False)
     print(df.to_string())

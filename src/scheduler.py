@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import numpy as np
 import csv
@@ -5,22 +6,23 @@ import copy
 import itertools
 
 STATIC_PWR_DRAWS = {
-    210: 42.4,
-    240: 42.5,
-    330: 42.9,
-    420: 43.3,
-    510: 43.6,
-    600: 43.9,
-    690: 42.1,
-    780: 42.2,
-    870: 43.8,
-    960: 44.8,
-    1050: 45.8,
-    1140: 47.5,
-    1230: 52.5,
-    1320: 57.96,
-    1410: 65.1,
+    210: 22.0,
+    240: 22.1,
+    330: 22.5,
+    420: 22.9,
+    510: 23.2,
+    600: 23.5,
+    690: 21.7,
+    780: 21.8,
+    870: 23.4,
+    960: 24.4,
+    1050: 25.4,
+    1140: 27.1,
+    1230: 32.1,
+    1320: 37.56,
+    1410: 44.7,
 }
+FAN_PWR = 20.4
 IDLE_PWR_DRAWS = {
     210: 1.3904760350877268, 
     240: 1.4434391811286673, 
@@ -44,30 +46,9 @@ CI = 490
 LT = 4 * 352 * 24 * 60 * 60
 C_M = 1/0.9 * (583 * 1.52 + 350 + 500) * 8.26 + 66.60 * 80 + 2 * 150
 
-BASE_DIR = f"/home/ps35324/sus-gpus/motivation/batch-size/aggregated-power-data"
-MODEL_DATABASE = f'{BASE_DIR}/model_datastore.csv'
-
-
-def brute_force_scheduler(models_slos: dict, model_profiles_dir: str, objective: str):
-
-    # 1. For each model, prune profiles that do not meet SLOs or throughput requirements
-    pruned_profiles = {}
-    for model, slos in models_slos.items():
-        df_profile = pd.read_csv(f"{model_profiles_dir}/{model}_profiles.csv")
-        latency_slo = slos[0]
-        tput_req = slos[1]
-        df_filtered = df_profile[~((df_profile["latency"] > latency_slo) | (df_profile["throughput"] > tput_req))]
-        pruned_profiles[model] = df_filtered
-    
-    # 2. Generate cartesian product of all possible GPU placement configurations
-    
-
-
-    # 3. Filter out invalid configurations that exceed GPU resources
-
-    # 4. Populate cartesian product table with power draw estimations and energy consumption
-
-    # 5. Select optimal configurations based on objective (minimize power draw, energy, operational carbon, embodied carbon, total carbon)
+# BASE_DIR = f"/home/ps35324/sus-gpus/motivation/batch-size/aggregated-power-data"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_DATABASE = os.path.join(BASE_DIR, '..', 'data', 'model_datastore.csv')
 
 
 def cost_estimator(frequency, power_list, latency_list, cost_metric='power'):
@@ -85,7 +66,7 @@ def cost_estimator(frequency, power_list, latency_list, cost_metric='power'):
     """
     #TODO: Update with power estimator function
     if cost_metric == 'power':
-        return STATIC_PWR_DRAWS[frequency] + IDLE_PWR_DRAWS[frequency] + sum(power_list)
+        return STATIC_PWR_DRAWS[frequency] + FAN_PWR + IDLE_PWR_DRAWS[frequency] + sum(power_list)
     elif cost_metric == 'energy':
         pairs = sorted(zip(latency_list, power_list))
         lat_sorted, pwr_sorted = zip(*pairs)
@@ -94,7 +75,7 @@ def cost_estimator(frequency, power_list, latency_list, cost_metric='power'):
 
         energy = 0.0
         for i in range(len(pwr_sorted)):
-            remaining_sum_pwr = STATIC_PWR_DRAWS[frequency] + IDLE_PWR_DRAWS[frequency] + sum(pwr_sorted[i:])
+            remaining_sum_pwr = STATIC_PWR_DRAWS[frequency] + FAN_PWR + IDLE_PWR_DRAWS[frequency] + sum(pwr_sorted[i:])
             dt = lat_sorted[0] if i==0 else lat_sorted[i] - lat_sorted[i-1]
             energy += remaining_sum_pwr * dt
         return energy
@@ -105,6 +86,20 @@ def cost_estimator(frequency, power_list, latency_list, cost_metric='power'):
         C_O = PUE * CI * E
         C_E = (T / LT) * C_M
         return C_O + C_E
+    elif cost_metric == 'additive_power' or cost_metric == 'additive_energy':
+        return STATIC_PWR_DRAWS[frequency] + FAN_PWR*(len(power_list)) + IDLE_PWR_DRAWS[frequency]*(len(power_list)) + sum(power_list)
+    elif cost_metric == 'additive_energy':
+        pairs = sorted(zip(latency_list, power_list))
+        lat_sorted, pwr_sorted = zip(*pairs)
+        lat_sorted = list(lat_sorted)
+        pwr_sorted = list(pwr_sorted)
+
+        energy = 0.0
+        for i in range(len(pwr_sorted)):
+            remaining_sum_pwr = STATIC_PWR_DRAWS[frequency] + FAN_PWR*(len(power_list)) + IDLE_PWR_DRAWS[frequency]*(len(power_list)) + sum(pwr_sorted[i:])
+            dt = lat_sorted[0] if i==0 else lat_sorted[i] - lat_sorted[i-1]
+            energy += remaining_sum_pwr * dt
+        return energy
 
 
 def config_selector(model_name, latency_slo, throughput_slo, cost_metric="power", csv_path=MODEL_DATABASE):
@@ -273,6 +268,10 @@ def transform_frequencies(freqs, cost_metric='power'):
     elif cost_metric == 'energy':
         return np.sort(freqs)[::-1]
     elif cost_metric == 'carbon':
+        return np.sort(freqs)[::-1]
+    elif cost_metric == 'additive_power':
+        return np.sort(freqs)[::-1]
+    elif cost_metric == 'additive_energy':
         return np.sort(freqs)[::-1]
 
 
@@ -549,6 +548,10 @@ def cost_swig(frequency, power, latency, cost_metric='power'):
         return power
     elif cost_metric == 'carbon':
         return power
+    elif cost_metric == 'additive_power':
+        return power
+    elif cost_metric == 'additive_energy':
+        return power
 
 
 def swing_sorting(sorted_bins, cost_metric='power', csv_path=MODEL_DATABASE):
@@ -818,7 +821,8 @@ def deployer(input_list, cost_metric='power', NUMBER_OF_GPUS=None, csv_path=MODE
 
         # 4.3 --> Traverse bottom-->up, Update & Remove bins that have the max GPU allocation
         # Sort bins based on swing
-        sorted_bins_by_swing = swing_sorting(sorted_bins)
+        if len(sorted_bins) > 0:
+            sorted_bins_by_swing = swing_sorting(sorted_bins)
         # print('SWING SORTED BINS:')
         # pretty_print_bins(sorted_bins_by_swing)
         i_2 = len(sorted_bins_by_swing)-1
@@ -846,7 +850,8 @@ def deployer(input_list, cost_metric='power', NUMBER_OF_GPUS=None, csv_path=MODE
                         sorted_bins.pop(j_2)  # remove merged from working set
 
                     merged_b = True
-                    sorted_bins_by_swing = swing_sorting(sorted_bins) # Update swing bins
+                    if len(sorted_bins) > 0:
+                        sorted_bins_by_swing = swing_sorting(sorted_bins) # Update swing bins
                     i_2 = len(sorted_bins_by_swing)-1 # Start again
                     break  # stop scanning j for this i
 
@@ -957,14 +962,34 @@ for base_model in BASE_INPUTS:
     INPUTS_25.append(model_tuple)
 INPUTS_LOADS_DICT['25'] = INPUTS_25
 
-LOAD = 50
+LOAD = 25
 INPUT = INPUTS_LOADS_DICT[str(LOAD)]
 print(INPUT)
 
 
-a = deployer(INPUT, cost_metric='energy', NUMBER_OF_GPUS=5, csv_path=MODEL_DATABASE)
+DECISION_METRIC = 'energy'
+NUM_GPUS = 5
+a = deployer(INPUT, cost_metric=DECISION_METRIC, NUMBER_OF_GPUS=NUM_GPUS, csv_path=MODEL_DATABASE)
 print(f'--------------')
 print(f'| Final Bins |')
 print(f'--------------')
 pretty_print_bins(a)
-print(sum([elem['total_cost'] for elem in a]))
+
+# Scheduling decisions use the selected (possibly additive) metric, but report the total
+# cost using the non-additive estimate: energy for energy/additive_energy, power for
+# power/additive_power, and carbon otherwise. Recomputed per bin from its packed configs.
+if DECISION_METRIC in ('energy', 'additive_energy'):
+    report_metric = 'energy'
+elif DECISION_METRIC in ('power', 'additive_power'):
+    report_metric = 'power'
+else:
+    report_metric = 'carbon'
+
+total_cost = 0
+for bin_item in a:
+    configs = bin_item["configs"]
+    freq = configs[0]["gpu_frequency"]
+    power_list = [cfg["power"] for cfg in configs]
+    latency_list = [cfg["latency"] for cfg in configs]
+    total_cost += cost_estimator(freq, power_list, latency_list, cost_metric=report_metric)
+print(total_cost)
