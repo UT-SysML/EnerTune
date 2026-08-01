@@ -38,6 +38,7 @@ COLORS = ['#fc5a50', "#9806f3", "#06f379", "#f306b4f9", '#069af3']
 
 EVAL_BASE_DIR = f"../results/eval-results/"
 
+# Section 7.1 Figure 10
 def e2e_plot():
     df_list = []
     system_hue_order = ['gpulets', 'usher', 'fgd', 'parva', 'et-energy', 'et-power', 'et-carbon']
@@ -273,4 +274,184 @@ def e2e_plot():
     plt.savefig(f'./plots/e2e.pdf', bbox_inches='tight', dpi=500, format='pdf')
     plt.close()
 
+# Section 7.2 Figure 12
+def ablation_placement_only():
+    
+    # Prep power data
+    df_list = []
+    system_hue_order = ['gpulets', 'usher', 'fgd', 'parva', 'et-power', 'et-placement-only-power']
+    for system in system_hue_order:
+        df = pd.read_csv(f'{EVAL_BASE_DIR}/{system}-results.csv')
+        df_list.append(df)
+    df = pd.concat(df_list)
+    df_power_sum = (
+        df.groupby(['system', 'load'])
+        .agg(total_avg_pwr=('avg_pwr', 'sum'),
+            total_max_pwr=('max_pwr', 'sum'))
+        .reset_index()
+    )
+    system_maps = {
+        'gpulets': 'GPULets',
+        'usher': 'Usher',
+        'fgd': 'FGD',
+        'parva': 'Parva',
+        'et-power': 'ET',
+        'et-placement-only-power': 'ET-PlaceOnly'
+    }
+    df_power_sum['system'] = df_power_sum['system'].replace(system_maps)
+    df_power_sum = df_power_sum[df_power_sum['load'] == 100]
+
+    # Prep energy data
+    df_list = []
+    system_hue_order = ['gpulets', 'usher', 'fgd', 'parva', 'et-energy', 'et-placement-only-energy']
+    for system in system_hue_order:
+        df = pd.read_csv(f'{EVAL_BASE_DIR}/{system}-results.csv')
+        df_list.append(df)
+    df = pd.concat(df_list)
+    df_energy_sum = (
+        df.groupby(['system', 'load'])
+        .agg(sum_total_energy=('total_energy', 'sum'))
+        .reset_index()
+    )
+
+    df_energy_sum['scaled_total_energy'] = np.where(
+        df_energy_sum['load'] <= 75,
+        df_energy_sum['sum_total_energy'] * df_energy_sum['load'] / 100,
+        df_energy_sum['sum_total_energy']
+    )
+    df_energy_sum = df_energy_sum[df_energy_sum['load'] == 100]
+    system_maps = {
+        'gpulets': 'GPULets',
+        'usher': 'Usher',
+        'fgd': 'FGD',
+        'parva': 'Parva',
+        'et-energy': 'ET',
+        'et-placement-only-energy': 'ET-PlaceOnly'
+    }
+    df_energy_sum['system'] = df_energy_sum['system'].replace(system_maps)
+    df_energy_sum['scaled_total_energy'] /= 10**6
+
+    # Prep carbon data
+    df_list = []
+    system_hue_order = ['gpulets', 'usher', 'fgd', 'parva', 'et-carbon', 'et-placement-only-carbon']
+    for system in system_hue_order:
+        df = pd.read_csv(f'{EVAL_BASE_DIR}/{system}-results.csv')
+        df_list.append(df)
+    df = pd.concat(df_list)
+    df_carbon_sum = (
+        df.groupby(['system', 'load'])
+        .agg(sum_total_carbon=('total_carbon', 'sum'))
+        .reset_index()
+    )
+
+    df_carbon_sum['scaled_total_carbon'] = np.where(
+        df_carbon_sum['load'] <= 75,
+        df_carbon_sum['sum_total_carbon'] * df_carbon_sum['load'] / 100,
+        df_carbon_sum['sum_total_carbon']
+    )
+    df_carbon_sum['scaled_total_carbon'] /= 10**3
+    df_carbon_sum = df_carbon_sum[df_carbon_sum['load'] == 100]
+    system_maps = {
+        'gpulets': 'GPULets',
+        'usher': 'Usher',
+        'fgd': 'FGD',
+        'parva': 'Parva',
+        'et-carbon': 'ET',
+        'et-placement-only-carbon': 'ET-PlaceOnly'
+    }
+    df_carbon_sum['system'] = df_carbon_sum['system'].replace(system_maps)
+
+    # Plot data
+    sns.set_style("whitegrid", {
+        'grid.linestyle': ':',     
+        'grid.color': '#333333',   
+        'grid.linewidth': 1.5     
+    })
+    fig, (ax1, ax2, ax3) = plt.subplots(1,3, figsize=(20, 5))
+    hue_colors = [
+        "#E29F18",  # mustard gold
+        "#D62728",  # strong red
+        "#1F77B4",  # vibrant blue
+        "#9467BD",  # rich purple
+        "#FF7F0E",   # bright orange
+        "#2CA02C",  # vibrant green
+    ]
+    order = ['GPULets', 'FGD', 'Parva', 'Usher', 'ET-PlaceOnly', 'ET']
+
+    p1 = sns.barplot(ax=ax1, data=df_power_sum, x='system', y='total_avg_pwr_kw', order=order, palette=hue_colors)
+    p1.set_xlabel('System', fontsize=54)
+    p1.set_ylabel('Power(kW)', fontsize=54)
+    p1.tick_params(axis='x', labelsize=54)
+    p1.tick_params(axis='y', labelsize=54)
+    p1.set_ylim(0)
+    p1.locator_params(nbins=4, axis='y')
+    p1.set_xticklabels([])      # hide labels
+    p1.set_xticks([])           # hide ticks
+
+    p2 = sns.barplot(ax=ax2, data=df_energy_sum, x='system', y='scaled_total_energy', order=order, palette=hue_colors)
+    p2.set_xlabel('System', fontsize=54)
+    p2.set_ylabel('Energy (MJ)', fontsize=54)
+    p2.tick_params(axis='x', labelsize=54)
+    p2.tick_params(axis='y', labelsize=54)
+    p2.set_ylim(0)
+    p2.locator_params(nbins=4, axis='y')
+    p2.set_xticklabels([])      # hide labels
+    p2.set_xticks([])           # hide ticks
+
+
+    p3 = sns.barplot(ax=ax3, data=df_carbon_sum, x='system', y='scaled_total_carbon', order=order, palette=hue_colors)
+    p3.set_xlabel('System', fontsize=54)
+    p3.set_ylabel('CO2 (kg)', fontsize=54)
+    p3.tick_params(axis='x', labelsize=54)
+    p3.tick_params(axis='y', labelsize=54)
+    p3.set_ylim(0)
+    p3.locator_params(nbins=4, axis='y')
+    p3.set_xticklabels([])      # hide labels
+    p3.set_xticks([])           # hide ticks
+
+    for p in [p1, p2, p3]:
+        for patch in p.patches:
+            patch.set_edgecolor('black')  # Set border color
+            patch.set_linewidth(2)
+    
+    for ax in [ax1, ax2, ax3]:
+        for spine in ax.spines.values():
+            spine.set_edgecolor('black')
+            spine.set_linewidth(2) # Set border width in points
+
+    handles = p3.patches
+    labels = order
+    unique = list(dict(zip(labels, handles)).items())
+    labels_unique = [u[0] for u in unique]
+    handles_unique = [u[1] for u in unique]
+
+    plt.tight_layout()
+    p3.legend(
+        handles_unique,
+        labels_unique,
+        ncol=6,
+        frameon=False,
+        bbox_to_anchor=(-1.3, 1.1),  # move to the top
+        loc='center',
+        fontsize=48,
+        title=None,
+        columnspacing=0.6,
+        handletextpad=0.2,
+        handlelength=1
+    )
+    # plt.legend( ncol=2, loc='upper center', bbox_to_anchor=(-1, 1.7), frameon=False, fontsize=42, columnspacing=0.8)
+    # plt.legend(
+    #     ncol=5,
+    #     loc='upper center',
+    #     bbox_to_anchor=(-1, 1.4),
+    #     frameon=False,
+    #     fontsize=42,
+    #     columnspacing=0.5,
+    #     handletextpad=0.2,
+    #     handlelength=1
+    # )
+    plt.savefig(f'./plots/ablation-placement-only.pdf', bbox_inches='tight', dpi=500, format='pdf')
+    plt.close()
+
 e2e_plot()
+ablation_placement_only()
