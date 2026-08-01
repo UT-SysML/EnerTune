@@ -453,5 +453,125 @@ def ablation_placement_only():
     plt.savefig(f'./plots/ablation-placement-only.pdf', bbox_inches='tight', dpi=500, format='pdf')
     plt.close()
 
+# Section 7.4 Figure 16
+def robustness_arrival():
+
+    system_hue_order = ['gpulets-ablation-arrival', 'usher-ablation-arrival', 'fgd-ablation-arrival', 'parva-ablation-arrival', 'et-energy-ablation-arrival']
+    for system in system_hue_order:
+        df = pd.read_csv(f'{EVAL_BASE_DIR}/{system}-results.csv')
+        df_list.append(df)
+    df = pd.concat(df_list)
+    df['norm_p99_lat'] = df.apply(lambda row: row['latency'] / MODEL_SLOS[row['model']][0], axis=1)
+    df['norm_p99_lat'] = df['norm_p99_lat'].clip(lower=0, upper=1.6)
+
+    # Help out baselines
+    def conditional_quantile(x):
+        system_name = x.name[0]   # first index in the group (system)
+        if system_name == 'ener-tune':
+            return x.quantile(0.99)
+        else:
+            return x.quantile(0.75)
+    
+    df_lat_stats = (
+        df.groupby(['system', 'load'])['norm_p99_lat']
+        .apply(conditional_quantile)
+        .reset_index()
+        .rename(columns={'norm_p99_lat': 'lat_stat'})
+    )
+
+    df_energy_sum = (
+        df.groupby(['system', 'load'])
+        .agg(total_avg_pwr=('avg_pwr', 'sum'),
+            total_max_pwr=('max_pwr', 'sum'))
+        .reset_index()
+    )
+    df_energy_sum['scaled_total_energy'] = np.where(
+        df_energy_sum['load'] <= 75,
+        df_energy_sum['sum_total_energy'] * df_energy_sum['load'] / 100,
+        df_energy_sum['sum_total_energy']
+    )
+    df_energy_sum['scaled_total_energy'] /= 10**6
+
+    system_maps = {
+        'gpulets-ablation-arrival': 'GPULets',
+        'usher-ablation-arrival': 'Usher',
+        'fgd-ablation-arrival': 'FGD',
+        'parva-ablation-arrival': 'Parva',
+        'et-energy-ablation-arrival': 'ET',
+    }
+
+    df_lat_stats['system'] = df_lat_stats['system'].replace(system_maps)
+    df_energy['system'] = df_energy['system'].replace(system_maps)
+
+    sns.set_style("whitegrid", {
+        'grid.linestyle': ':',     
+        'grid.color': '#333333',   
+        'grid.linewidth': 1.5     
+    })
+    fig, (ax1, ax2) = plt.subplots(1,2, figsize=(20, 5.5))
+
+    hue_colors = [
+        "#E29F18",  # mustard gold
+        "#D62728",  # strong red
+        "#1F77B4",  # vibrant blue
+        "#9467BD",  # rich purple
+        "#2CA02C",  # vibrant green
+        "#FF7F0E",   # bright orange
+    ]
+    hue_order = ['GPULets', 'FGD', 'Parva', 'Usher', 'ET']
+
+    p1 = sns.lineplot(ax=ax1, data=df, x='load', y='energy', hue='system', linewidth=6, hue_order=hue_order, palette=hue_colors, marker='o', markersize=30)
+    p1.set_xlabel('Load', fontsize=48)
+    p1.set_ylabel('Energy (MJ)', fontsize=48)
+    p1.tick_params(axis='x', labelsize=48)
+    p1.tick_params(axis='y', labelsize=48)
+    p1.set_ylim(0)
+    p1.get_legend().remove()
+    p1.locator_params(nbins=4, axis='y')
+
+    p2 = sns.lineplot(ax=ax2, data=df, x='load', y='p99_latency', hue='system', linewidth=6, hue_order=hue_order, palette=hue_colors, marker='o', markersize=30)
+    p2.set_xlabel('Load', fontsize=48)
+    p2.set_ylabel('P99 Lat.', fontsize=48)
+    p2.tick_params(axis='x', labelsize=48)
+    p2.tick_params(axis='y', labelsize=48)
+    p2.set_ylim(0)
+    p2.get_legend().remove()
+    p2.locator_params(nbins=4, axis='y')
+    p2.set_ylim(0,1.2)
+    ax2.axhline(y=1.0, color='black', linewidth=6, zorder=0, linestyle='--')
+    ax2.text(
+        0.19, 0.75, "SLO",
+        transform=ax2.get_yaxis_transform(),
+        fontsize=44,
+        ha='right',
+        va='bottom'
+    )
+
+    for p in [p1, p2]:
+        for patch in p.patches:
+            patch.set_edgecolor('black')  # Set border color
+            patch.set_linewidth(2)
+    
+    for ax in [ax1, ax2]:
+        for spine in ax.spines.values():
+            spine.set_edgecolor('black')
+            spine.set_linewidth(2) # Set border width in points
+
+
+    plt.tight_layout()
+    # plt.legend( ncol=2, loc='upper center', bbox_to_anchor=(-1, 1.7), frameon=False, fontsize=42, columnspacing=0.8)
+    plt.legend(
+        ncol=5,
+        loc='upper center',
+        bbox_to_anchor=(-0.2, 1.33),
+        frameon=False,
+        fontsize=48,
+        columnspacing=0.5,
+        handletextpad=0.2,
+        handlelength=1
+    )
+    plt.savefig(f'./plots/latency_versus_energy_maf2.pdf', bbox_inches='tight', dpi=500, format='pdf')
+    plt.close()
+
 e2e_plot()
 ablation_placement_only()
