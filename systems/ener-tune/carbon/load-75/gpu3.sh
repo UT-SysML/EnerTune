@@ -4,7 +4,7 @@ git_dir=$(git rev-parse --show-toplevel)
 cd ${git_dir}
 
 freq=1050
-device=3
+device=0
 
 # Model-BatchSize-MIGSlice-NumReqs-LoadStart-LoadEnd-LoadSteps-Rps
 mixes=(
@@ -13,7 +13,7 @@ mixes=(
 )
 
 for mix in "${mixes[@]}"; do
-    echo "System: Usher | Running mix: $mix | Device: $device"
+    echo "System: EnerTune | Running mix: $mix | Device: $device"
     ./run.sh \
       --device-type a100 \
       --device-id ${device} \
@@ -23,6 +23,28 @@ for mix in "${mixes[@]}"; do
       --max-freq ${freq} \
       ${mix}
     sleep 10
-    echo "Completed ${mix} on GPU ${device} with ${freq} MHz for system Usher."
+    echo "Completed ${mix} on GPU ${device} with ${freq} MHz for system EnerTune."
+    echo""
+done
+
+freq=1320
+
+# Model-BatchSize-MIGSlice-NumReqs-LoadStart-LoadEnd-LoadSteps-Rps
+mixes=(
+"resnet50-4-4-250380-0.75-0.75-0.25-1391.97 vgg19-2-3-30517-0.75-0.75-0.25-169.54" # requires 1320 MHz
+)
+
+for mix in "${mixes[@]}"; do
+    echo "System: EnerTune | Running mix: $mix | Device: $device"
+    ./run.sh \
+      --device-type a100 \
+      --device-id ${device} \
+      --modes custom-mig \
+      --distribution point \
+      --min-freq ${freq} \
+      --max-freq ${freq} \
+      ${mix}
+    sleep 10
+    echo "Completed ${mix} on GPU ${device} with ${freq} MHz for system EnerTune."
     echo""
 done

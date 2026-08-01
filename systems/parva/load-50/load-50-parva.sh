@@ -29,3 +29,7 @@ for mix in "${mixes[@]}"; do
     echo "Completed ${mix} on GPU ${device} with ${freq} MHz for system FGD."
     echo""
 done
+
+mkdir -p ${git_dir}/results/parva-results/load-50
+cp -r ${git_dir}/results/a100/* ${git_dir}/results/parva-results/load-50/
+rm -rf ${git_dir}/results/a100/*
