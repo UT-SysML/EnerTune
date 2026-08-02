@@ -202,7 +202,7 @@ def mig_allocation_overhead():
 
     device_id = 0
     slice_to_gi = {1: 19, 2: 14, 3: 9, 4: 5, 7: 0}
-    allocations = [[7], [3, 3], [2, 2, 2], [1, 1, 1, 1, 1, 1, 1]]
+    allocations = [[7], [4], [3], [2], [1]]
     repeats = 3
 
     def mig(args):
@@ -225,39 +225,16 @@ def mig_allocation_overhead():
 
     def create_allocation(slices):
         gi_string = ",".join(str(slice_to_gi[s]) for s in slices)
-        mig(["-cgi", gi_string])
-        gi_ids = []
-        for line in mig(["-lgi"]).stdout.splitlines():
-            fields = line.split()
-            if len(fields) >= 6 and fields[5].isdigit():
-                gi_ids.append(fields[5])
-        for gi_id in gi_ids:
-            ci_profile = None
-            for line in mig(["-gi", gi_id, "-lcip"]).stdout.splitlines():
-                if "*" in line:
-                    fields = line.split()
-                    if len(fields) >= 6:
-                        ci_profile = fields[5].strip("*")
-                        break
-            if ci_profile is not None:
-                mig(["-gi", gi_id, "-cci", ci_profile])
+        mig(["-cgi", gi_string, "-C"])
 
     def destroy_allocation():
-        gi_ids = []
-        ci_ids = []
-        for line in mig(["-lci"]).stdout.splitlines():
-            fields = line.split()
-            if len(fields) >= 7 and fields[2].isdigit() and fields[6].isdigit():
-                gi_ids.append(fields[2])
-                ci_ids.append(fields[6])
-        for ci_id, gi_id in zip(ci_ids, gi_ids):
-            mig(["-dci", "-ci", ci_id, "-gi", gi_id])
+        mig(["-dci"])
         mig(["-dgi"])
 
     print("EnerTune MIG allocation-change timing")
     print("-" * 72)
     print(f"Device       : cuda:{device_id}")
-    print(f"Commands     : nvidia-smi mig -cgi/-cci (create), -dci/-dgi (destroy)")
+    print(f"Commands     : nvidia-smi mig -cgi <p> -C (create), -dci/-dgi (destroy)")
     print(f"repeats      : {repeats}")
     print("-" * 72)
     if not mig_enabled():
@@ -286,6 +263,108 @@ def mig_allocation_overhead():
     print("time (ms) = create/destroy of a MIG allocation as in helper.sh setup/cleanup_mig_if_needed(); target is < 200 ms.")
 
 
+def scheduling_decision_overhead():
+    import os
+    import sys
+    import time
+    import builtins
+    import importlib
+    import statistics
+
+    src_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src")
+    if src_dir not in sys.path:
+        sys.path.insert(0, src_dir)
+
+    real_print = builtins.print
+    builtins.print = lambda *a, **k: None
+    try:
+        scheduler = importlib.import_module("scheduler")
+    finally:
+        builtins.print = real_print
+
+    deployer = scheduler.deployer
+    inputs = scheduler.INPUTS_LOADS_DICT
+    num_gpus = scheduler.NUM_GPUS
+    metric = scheduler.DECISION_METRIC
+    csv_path = scheduler.MODEL_DATABASE
+
+    loads = ["25", "50", "75", "100", "125"]
+    repeats = 7
+
+    def timed_deploy(input_list):
+        saved = builtins.print
+        builtins.print = lambda *a, **k: None
+        try:
+            start = time.perf_counter()
+            deployer(input_list, cost_metric=metric, NUMBER_OF_GPUS=num_gpus, csv_path=csv_path)
+            return (time.perf_counter() - start) * 1e3
+        finally:
+            builtins.print = saved
+
+    print("EnerTune scheduling-decision timing")
+    print("-" * 60)
+    print(f"repeats      : {repeats}")
+    print("-" * 60)
+    print(f"{'load (%)':>8} | {'min (ms)':>10} | {'median (ms)':>11} | {'max (ms)':>10}")
+    print("-" * 60)
+    for load in loads:
+        input_list = inputs[load]
+        timed_deploy(input_list)
+        samples_ms = [timed_deploy(input_list) for _ in range(repeats)]
+        print(f"{load:>8} | {min(samples_ms):>10.2f} | {statistics.median(samples_ms):>11.2f} | {max(samples_ms):>10.2f}")
+    print("-" * 60)
+
+
+def scheduling_scale_overhead():
+    import os
+    import sys
+    import time
+    import builtins
+    import importlib
+
+    src_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src")
+    if src_dir not in sys.path:
+        sys.path.insert(0, src_dir)
+
+    real_print = builtins.print
+    builtins.print = lambda *a, **k: None
+    try:
+        scheduler = importlib.import_module("scheduler")
+    finally:
+        builtins.print = real_print
+
+    deployer = scheduler.deployer
+    inputs = scheduler.INPUTS_LOADS_DICT
+    metric = "power"
+    csv_path = scheduler.MODEL_DATABASE
+
+    num_models = 1000
+    chunk_size = 22
+    gpu_budget = 8
+    base = list(inputs["25"])
+    model_list = (base * (num_models // len(base) + 1))[:num_models]
+    chunks = [model_list[i:i + chunk_size] for i in range(0, len(model_list), chunk_size)]
+
+    def timed_deploy(input_list):
+        saved = builtins.print
+        builtins.print = lambda *a, **k: None
+        try:
+            start = time.perf_counter()
+            deployer(input_list, cost_metric=metric, NUMBER_OF_GPUS=gpu_budget, csv_path=csv_path)
+            return (time.perf_counter() - start) * 1e3
+        finally:
+            builtins.print = saved
+
+    print("EnerTune scheduling-decision timing at scale")
+    print("-" * 60)
+    per_chunk_ms = [timed_deploy(chunk) for chunk in chunks]
+    total_ms = sum(per_chunk_ms)
+    print(f"{'models':>8} | {'chunks':>7} | {'total (ms)':>12} | {'ms/chunk':>10}")
+    print("-" * 60)
+    print(f"{len(model_list):>8} | {len(chunks):>7} | {total_ms:>12.2f} | {total_ms / len(chunks):>10.2f}")
+    print("-" * 60)
+
+
 if __name__ == "__main__":
     # power_estimation_overhead()
     # print()
@@ -294,4 +373,8 @@ if __name__ == "__main__":
     frequency_change_overhead()
     print()
     mig_allocation_overhead()
+    print()
+    scheduling_decision_overhead()
+    print()
+    scheduling_scale_overhead()
     print()
