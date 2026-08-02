@@ -454,6 +454,209 @@ def ablation_placement_only():
     plt.savefig(f'./plots/ablation-placement-only.pdf', bbox_inches='tight', dpi=500, format='pdf')
     plt.close()
 
+# Section 7.3 Figure 14
+def profiling_cost():
+    # Get profiling time
+        parva_et_profiling_time_distribution = {
+            'resnet50': 20,
+            'mobilenet_v3_large': 20,
+            'vgg11': 20,
+            'resnet152': 20,
+            'densenet169': 20,
+            'densenet161': 20,
+            'vgg19': 20,
+            'diffusion_1024_1024': 30,
+            'diffusion_256_256': 30,
+            'whisper': 20,
+            'gpt': 30
+        }
+    
+        parva_base = 5 * 8 * 3 # 5 mig slices, 8 batch sizes, up to 3 mps
+        et_base = 0.15 * 5 * 6 * 10
+    
+        parva_times = []
+        et_times = []
+        num_kernels_dict = {}
+        for model in parva_et_profiling_time_distribution:
+            parva_times.append(parva_base * parva_et_profiling_time_distribution[model])
+            et_times.append(et_base * parva_et_profiling_time_distribution[model])
+            trace_model = model
+            if model == 'diffusion_256_256':
+                trace_model = 'diffusion_1024_1024'
+            df_nsys = pd.read_csv(f'{DATA_BASE_DIR}/gputraces/{trace_model}_output_nsys_gputrace.csv')
+            unique_kernels = df_nsys['Name'].unique()
+            num_unique_kernels = len(unique_kernels)
+            num_kernels = len(df_nsys)
+            num_kernels_dict[model] = [num_unique_kernels, num_kernels]
+        
+        bs_profiling_time = {
+            1: 15,
+            2: 15,
+            4: 17,
+            8: 18,
+            16: 20,
+            32: 20
+        }   
+    
+        # Get number of kernels and number of unique kernels
+        usher_times = []
+        gpulets_times = []
+        for model in num_kernels_dict:
+            usher_time = 0
+            gpulets_time = 0
+            for bs in bs_profiling_time:
+                usher_time += bs_profiling_time[bs] * num_kernels_dict[model][0]
+                gpulets_time += bs_profiling_time[bs] * num_kernels_dict[model][1]
+            usher_times.append(usher_time)
+            gpulets_times.append(gpulets_time)
+        
+        systems = ['Parva'] * len(parva_times) + ['ET'] * len(et_times) + ['Usher'] * len(usher_times) + ['GLets'] * len(gpulets_times)
+        profiling_times = parva_times + et_times + usher_times + gpulets_times
+    
+        df_profiling_times = pd.DataFrame({
+            'profiling_time': profiling_times,
+            'system': systems
+        })
+        df_profiling_times['profiling_time'] /= 3600
+    
+        # Get profiling energy consumption us versus brute force
+        parva_et_profiling_time_distribution = {
+            'resnet50': 20,
+            'mobilenet_v3_large': 20,
+            'vgg11': 20,
+            'resnet152': 20,
+            'densenet169': 20,
+            'densenet161': 20,
+            'vgg19': 20,
+            'diffusion_1024_1024': 30,
+            'diffusion_256_256': 30,
+            'whisper': 20,
+            'gpt': 30
+        }
+        # Brute force
+        brute_force_energies = []
+        et_energies = []
+        for model in parva_et_profiling_time_distribution:
+            df = pd.read_csv(f'{DATA_BASE_DIR}/{model}-perf-power-profile.csv')
+            df['profiling_energy'] = df['avg_power_draw'] * parva_et_profiling_time_distribution[model]
+            total_energy = df['profiling_energy'].sum()
+            brute_force_energies.append(total_energy)
+    
+            df_us = df.sample(frac=0.15, random_state=42)
+            total_energy = df_us['profiling_energy'].sum()
+            et_energies.append(total_energy)
+        
+        systems = ['Brute Force'] * len(brute_force_energies) + ['EnerTune'] * len(et_energies)
+        energies = brute_force_energies + et_energies
+        df_profiling_energy = pd.DataFrame({
+            'profiling_energy': energies,
+            'system': systems
+        })
+    
+        # Plot data
+        sns.set_style("whitegrid", {
+            'grid.linestyle': ':',     
+            'grid.color': '#333333',   
+            'grid.linewidth': 1.5     
+        })
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(20, 6))
+        hue_colors = [
+            "#E29F18",  # mustard gold
+            "#9467BD",  # rich purple
+            "#1F77B4",  # vibrant blue
+            "#2CA02C",  # vibrant green
+            "#D62728",  # strong red
+            "#FF7F0E"   # bright orange
+        ]
+        # df_profiling_times = df_profiling_times[df_profiling_times['system'] != 'GPULets']
+        df_profiling_times = df_profiling_times[df_profiling_times['profiling_time'] < 7]
+        avg_times = (
+            df_profiling_times
+            .groupby('system', as_index=False)['profiling_time']
+            .mean()
+        )
+    
+        print(df_profiling_times)
+    
+        order = ['GLets', 'Usher', 'Parva', 'ET']    
+        # for i, system in enumerate(order):
+        #     sns.ecdfplot(
+        #         data=df_profiling_times[df_profiling_times['system'] == system],
+        #         x='profiling_time',
+        #         ax=ax1,
+        #         color=hue_colors[i],
+        #         linewidth=4
+        #     )
+        # ax1.set_xlabel('Profiling GPU-Hours', fontsize=48)
+        # ax1.set_ylabel('CDF', fontsize=48)
+        # ax1.tick_params(axis='x', labelsize=48)
+        # ax1.tick_params(axis='y', labelsize=48)
+        
+        p1 = sns.boxplot(ax=ax1, data=df_profiling_times, x='system', y='profiling_time', order=order, palette=hue_colors, linewidth=3, width=0.6)
+        p1.set_xlabel('', fontsize=48)
+        p1.set_ylabel('Avg GPU-Hours', fontsize=48)
+        p1.tick_params(axis='x', labelsize=48)
+        p1.tick_params(axis='y', labelsize=48)
+        p1.set_ylim(0)
+        p1.locator_params(nbins=4, axis='y')
+        # p1.set_xticklabels([])      # hide labels
+        # p1.set_xticks([])           # hide ticks
+        # p1.set_yscale('log')
+    
+        avg_energy = (
+            df_profiling_energy
+            .groupby('system', as_index=False)['profiling_energy']
+            .mean()
+        )
+        df_profiling_energy['profiling_energy'] /= 1000
+        avg_energy['profiling_energy'] /= 10e3
+    
+        print(df_profiling_energy)
+    
+        # p2 = sns.barplot(ax=ax2, data=avg_energy, x='system', y='profiling_energy', palette=["#1F77B4", "#2CA02C"], width=0.4)
+        p2 = sns.boxplot(ax=ax2, data=df_profiling_energy, x='system', y='profiling_energy', palette=["#1F77B4", "#2CA02C"], linewidth=3, width=0.4)
+        p2.set_xlabel('', fontsize=48)
+        p2.set_ylabel('Avg Energy (kJ)', fontsize=48)
+        p2.tick_params(axis='x', labelsize=48)
+        p2.tick_params(axis='y', labelsize=48)
+        p2.set_ylim(0)
+        p2.locator_params(nbins=4, axis='y')
+        # p2.set_yscale('log')
+        for p in [ax1, p2]:
+            for patch in p.patches:
+                patch.set_edgecolor('black')  # Set border color
+                patch.set_linewidth(2)
+        
+        for ax in [ax1, ax2]:
+            for spine in ax.spines.values():
+                spine.set_edgecolor('black')
+                spine.set_linewidth(2) # Set border width in points
+    
+        handles = ax1.patches
+        labels = order
+        unique = list(dict(zip(labels, handles)).items())
+        labels_unique = [u[0] for u in unique]
+        handles_unique = [u[1] for u in unique]
+    
+    
+        plt.tight_layout()
+        # ax1.legend(
+        #     handles_unique,
+        #     labels_unique,
+        #     ncol=1,
+        #     frameon=False,
+        #     bbox_to_anchor=(0.75, 0.6),  # move to the top
+        #     loc='center',
+        #     fontsize=48,
+        #     title=None,
+        #     columnspacing=0.6,
+        #     handletextpad=0.2,
+        #     handlelength=1
+        # )
+        plt.savefig(f'./plots/profiling-cost.pdf', bbox_inches='tight', dpi=500, format='pdf')
+        plt.close()
+    
+
 # Seciton 7.3 Figure 15
 def estimation_accuracy():
     r2_values = []
@@ -860,7 +1063,8 @@ def robustness_arrival():
 
 
 
-e2e_plot()
-ablation_placement_only()
-estimation_accuracy()
-robustness_arrival()
+# e2e_plot()
+# ablation_placement_only()
+profiling_cost()
+# estimation_accuracy()
+# robustness_arrival()
