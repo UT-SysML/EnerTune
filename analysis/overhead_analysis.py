@@ -366,10 +366,10 @@ def scheduling_scale_overhead():
 
 
 if __name__ == "__main__":
-    # power_estimation_overhead()
-    # print()
-    # model_loading_overhead()
-    # print()
+    power_estimation_overhead()
+    print()
+    model_loading_overhead()
+    print()
     frequency_change_overhead()
     print()
     mig_allocation_overhead()

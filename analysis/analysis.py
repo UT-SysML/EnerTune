@@ -39,7 +39,7 @@ COLORS = ['#fc5a50', "#9806f3", "#06f379", "#f306b4f9", '#069af3']
 EVAL_BASE_DIR = f"../results/eval-results/"
 DATA_BASE_DIR = f"../data/"
 
-# Section 7.1 Figure 10
+# Section 7.1 - E2E
 def e2e_plot():
     df_list = []
     system_hue_order = ['gpulets', 'usher', 'fgd', 'parva', 'et-energy', 'et-power', 'et-carbon']
@@ -275,7 +275,127 @@ def e2e_plot():
     plt.savefig(f'./plots/e2e.pdf', bbox_inches='tight', dpi=500, format='pdf')
     plt.close()
 
-# Section 7.2 Figure 12
+# Section 7.2 - Ablation estimator
+def ablation_estimator():
+    energy_systems = {'et-energy': 'EnerTune', 'et-energy-estimator-ablation': 'Additive [60]'}
+    power_systems = {'et-power': 'EnerTune', 'et-pwr-estimator-ablation': 'Additive [60]'}
+
+    def load_results(systems):
+        return pd.concat([pd.read_csv(f'{EVAL_BASE_DIR}/{system}-results.csv') for system in systems])
+
+    # Energy (MJ): sum per-mix energy over each load, scaling sub-peak loads (as in e2e_plot).
+    df_energy = load_results(energy_systems)
+    df_energy_sum = (
+        df_energy.groupby(['system', 'load'])
+        .agg(total_energy=('total_energy', 'sum'))
+        .reset_index()
+    )
+    df_energy_sum['energy'] = np.where(
+        df_energy_sum['load'] <= 75,
+        df_energy_sum['total_energy'] * df_energy_sum['load'] / 100,
+        df_energy_sum['total_energy']
+    ) / 10**6
+    df_energy_sum['system'] = df_energy_sum['system'].replace(energy_systems)
+
+    # Power (kW): sum per-mix average power over each load.
+    df_power = load_results(power_systems)
+    df_power_sum = (
+        df_power.groupby(['system', 'load'])
+        .agg(total_avg_pwr=('avg_pwr', 'sum'))
+        .reset_index()
+    )
+    df_power_sum['power_kw'] = df_power_sum['total_avg_pwr'] / 1000
+    df_power_sum['system'] = df_power_sum['system'].replace(power_systems)
+
+    sns.set_style("whitegrid", {
+        'grid.linestyle': ':',     
+        'grid.color': '#333333',   
+        'grid.linewidth': 1.5     
+    })
+    fig, (ax1, ax2) = plt.subplots(1,2, figsize=(20, 6))
+
+    hue_colors = [
+        "#FF7F0E",   # bright orange
+        "#2CA02C",  # vibrant green
+    ]
+    hue_order = ['Additive [60]', 'EnerTune']
+
+    p1 = sns.lineplot(ax=ax1, data=df_energy_sum, x='load', y='energy', hue='system', linewidth=6, hue_order=hue_order, palette=hue_colors, marker='o', markersize=30)
+    p1.set_xlabel('Load', fontsize=56)
+    p1.set_ylabel('Energy (MJ)', fontsize=56)
+    p1.tick_params(axis='x', labelsize=56)
+    p1.tick_params(axis='y', labelsize=56)
+    p1.set_ylim(0)
+    # p1.get_legend().remove()
+    ax1.legend(
+        ncol=1,
+        loc='lower right',
+        bbox_to_anchor=(1.05, -0.15),
+        frameon=False,
+        fontsize=48,
+        columnspacing=0.5,
+        handletextpad=0.2,
+        handlelength=1
+    )
+    p1.locator_params(nbins=4, axis='y')
+    p1.locator_params(nbins=4, axis='x')
+
+    p2 = sns.lineplot(ax=ax2, data=df_power_sum, x='load', y='power_kw', hue='system', linewidth=6, hue_order=hue_order, palette=hue_colors, marker='o', markersize=30)
+    p2.set_xlabel('Load', fontsize=56)
+    p2.set_ylabel('Pwr (kW)', fontsize=56)
+    p2.tick_params(axis='x', labelsize=56)
+    p2.tick_params(axis='y', labelsize=56)
+    p2.set_ylim(0)
+    # p2.get_legend().remove()
+    ax2.legend(
+        ncol=1,
+        loc='lower right',
+        bbox_to_anchor=(1.05, -0.15),
+        frameon=False,
+        fontsize=48,
+        columnspacing=0.5,
+        handletextpad=0.2,
+        handlelength=1
+    )
+    p2.locator_params(nbins=4, axis='y')
+    p2.locator_params(nbins=4, axis='x')
+    # p2.set_ylim(0,1.2)
+    # ax2.axhline(y=1.0, color='black', linewidth=6, zorder=0, linestyle='--')
+    # ax2.text(
+    #     0.19, 1.01, "SLO",
+    #     transform=ax2.get_yaxis_transform(),
+    #     fontsize=44,
+    #     ha='right',
+    #     va='bottom'
+    # )
+
+    for p in [p1, p2]:
+        for patch in p.patches:
+            patch.set_edgecolor('black')  # Set border color
+            patch.set_linewidth(2)
+    
+    for ax in [ax1, ax2]:
+        for spine in ax.spines.values():
+            spine.set_edgecolor('black')
+            spine.set_linewidth(2) # Set border width in points
+
+
+    plt.tight_layout()
+    # plt.legend( ncol=2, loc='upper center', bbox_to_anchor=(-1, 1.7), frameon=False, fontsize=42, columnspacing=0.8)
+    # plt.legend(
+    #     ncol=5,
+    #     loc='upper center',
+    #     bbox_to_anchor=(-0.2, 1.4),
+    #     frameon=False,
+    #     fontsize=48,
+    #     columnspacing=0.5,
+    #     handletextpad=0.2,
+    #     handlelength=1
+    # )
+    plt.savefig(f'./plots/ablation_power_modeling.pdf', bbox_inches='tight', dpi=500, format='pdf')
+    plt.close()
+
+# Section 7.2 - Ablation placement
 def ablation_placement_only():
     
     # Prep power data
@@ -454,7 +574,7 @@ def ablation_placement_only():
     plt.savefig(f'./plots/ablation-placement-only.pdf', bbox_inches='tight', dpi=500, format='pdf')
     plt.close()
 
-# Section 7.3 Figure 14
+# Section 7.3 - Profiling cost
 def profiling_cost():
     # Get profiling time
         parva_et_profiling_time_distribution = {
@@ -656,8 +776,7 @@ def profiling_cost():
         plt.savefig(f'./plots/profiling-cost.pdf', bbox_inches='tight', dpi=500, format='pdf')
         plt.close()
     
-
-# Seciton 7.3 Figure 15
+# Seciton 7.3 - Estimation Accuracy
 def estimation_accuracy():
     r2_values = []
     mape_values = []
@@ -940,7 +1059,7 @@ def estimation_accuracy():
     plt.savefig(f'./plots/estimation-accuracy.pdf', bbox_inches='tight', dpi=500, format='pdf')
     plt.close()
 
-# Section 7.4 Figure 16
+# Section 7.4 - Robustness
 def robustness_arrival():
 
     system_hue_order = ['gpulets-ablation-arrival', 'usher-ablation-arrival', 'fgd-ablation-arrival', 'parva-ablation-arrival', 'et-energy-ablation-arrival']
@@ -1064,7 +1183,8 @@ def robustness_arrival():
 
 
 # e2e_plot()
+# ablation_estimator()
 # ablation_placement_only()
-profiling_cost()
+# profiling_cost()
 # estimation_accuracy()
 # robustness_arrival()

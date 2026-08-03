@@ -6,81 +6,26 @@ Our contributions include:
 - We introduce a novel analytical model that accurately estimates the power draw of spatially multiplexed GPUs from individual model power profiles. Our methodology eliminates tens of hours of joint profiling overhead and enables EnerTune to reduce power and energy consumption by 1.3× over prior work.
 - We develop an energy-aware bin-packing algorithm and build EnerTune on top of PyTorch. Compared to four state-of-the-art performance-driven baselines, EnerTune reduces energy and power draw by 1.4-2.3× and 1.3-2.6×, respectively, without violating SLOs, across load.
 
-### Hardware and CUDA Requirements
-We conduct our experiments on an A100 80GB GPU. CUDA Version is 12.9 and Driver Version is 575.57.08. Ensure CUDA is installed: 
-```
-$ python -m pip uninstall -y cuda || true
-$ python -m pip install --no-cache-dir "cuda-python>=12,<13"
-```
+## Reproducibility
 
-### Setup Environment
+We conduct our experiments on an A100 80GB GPU (CUDA 12.9, Driver 575.57.08). The docs below walk through reproducing each result in the paper. Start with the environment setup, run the experiments you care about, then plot.
 
-Install all python requirements in a python virtual environment:
-```
-$ sudo apt install python3-venv
-$ python3 -m venv <venv-path>
-$ source <venv-path>/bin/activate
-$ pip3 install -r requirements.txt
-```
-Compile the C++ per-GPU monitoring daemon
-```
-$ cd profiler
-$ make all
-```
+**Setup.** Install CUDA, the python requirements, and the monitoring daemon, and enable GPU sharing (MIG/MPS): [`docs/environment-setup.md`](./docs/environment-setup.md).
 
-Enable Multi-Instance GPUs (MIG). This is the hardware mechanism that EnerTune uses to share GPUs. 
-```
-$ source helper.sh
-$ is_mig_feature_available # should see 4
-$ assert_mig_status mig <device id (e.g., 0, 1, 2, 3) # if "MIG mode not enabled", continue below
-$ sudo nvidia-smi -mig 1 # Might need to insert sudo before
-$ sudo reboot now
-```
-Once rebooted, confirm MIG is enabled
-```
-$ assert_mig_status mig <device id (e.g., 0, 1, 2, 3) # if working correctly, there should be no output
-```
+**Experiments.** Each doc explains what it reproduces, which scripts to run, and where results land:
+- [`docs/eval-e2e.md`](./docs/eval-e2e.md) — end-to-end energy savings and SLO attainment vs. the baselines.
+- [`docs/eval-ablation.md`](./docs/eval-ablation.md) — Colocation Power Estimator and Resource Planner ablations.
+- [`docs/eval-profiling.md`](./docs/eval-profiling.md) — profiling cost and estimation accuracy.
+- [`docs/eval-robustness.md`](./docs/eval-robustness.md) — robustness to bursty (Poisson) arrivals.
+- [`docs/eval-overheads.md`](./docs/eval-overheads.md) — EnerTune's runtime overheads.
 
-### How to run experiments
-
-We require SUDO to set MIG slices, MPS, and adjust GPU frequency.
+**Plotting.** The experiment scripts write raw per-run output under `results/<system>-results/`. First aggregate it into per-system CSVs:
 ```
-$ export USE_SUDO=1
-````
-
-Indicate to our scripts where the python virtual environment lives
+$ python results/results-aggregator.py   # writes results/eval-results/<system>-results.csv
 ```
-$ export VENV=<venv-path>
+Then `analysis/analysis.py` turns those into the paper figures — `e2e_plot()`, `ablation_estimator()`, `ablation_placement_only()`, `estimation_accuracy()`, `profiling_cost()`, and `robustness_arrival()` (overhead figures live in `analysis/overhead_analysis.py`). Uncomment the figure you want at the bottom of the file, then:
 ```
-Run scripts for each baseline to reproduce E2E results. For easier reproducability efforts, we have adapted our scripts to use just a single GPU, running each set of models that would be placed on a GPU one at a time. This reduces the number of GPUs required for reproducability efforts. 
-
-Run each system at 5 load levels (25% to 125% load). In `systems/`, there is a directory per system: EnerTune, FGD, GPULets, ParvaGPU, and Usher. 
-
-For each baseline, run the following: 
+$ cd analysis && python analysis.py
 ```
-$ cd systems/{baseline} # either fgd, gpulets, parva, usher
-$ cd load-{load_level} # either 25, 50, 75, 100, or 125
-$ load-{load_level}-{baseline}.sh
-```
-
-For EnerTune, run the following:
-
-```
-$ cd systems/ener-tune/{optimization_metric} # power, energy, or carbon
-$ cd load-{load_level} # either 25, 50, 75, 100, or 125
-$ load-{load_level}-et-{optimization_metric}.sh # power, energy, or carbon
-```
-
-If running smoothly, you will see the following
-```
-System: {system} | Running mix: {job_mix} | Device: {device_id}
-Logs at /tmp/print_outs-{random-id}.txt
-Running point experiment for mig with round #0
-Made it before while loop for duration arg
-Duration is 0
-Run success: results are stored in results/a100/{job_mix_path}
-Exiting with error_code=0 (0 is clean exit)
-Examine /tmp/print_outs-{random-id}.txt for logs
-Completed {job_mix} on GPU {device_id} with {frequency} MHz for system {system}.
-```
+Each function reads its aggregated results and writes a PDF to `analysis/plots/`.
 

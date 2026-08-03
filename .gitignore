@@ -1,3 +1,7 @@
 /profiler/gmonitor
 src/__pycache__
 *.log
+analysis/__pycache__
+analysis/plots/*
+!analysis/plots/.gitkeep
+.venv-analysis/
